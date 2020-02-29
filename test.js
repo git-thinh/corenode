@@ -4,26 +4,54 @@ const readFile = util.promisify(fs.readFile);
 var snappy = require('snappy');
 
 
-console.log('BEGIN ...');
-//console.time();
-readFile('test.txt', 'utf8').then(data => {
-    console.log('data compressed 3,735,671 = ', data.length);
-     
-    snappy.compress(data, function (err, compressed) {
-        console.log('compressed Buffer = ', compressed.length);
-        // return it as a string
-        snappy.uncompress(compressed, { asBuffer: false }, function (err, original) {
-            console.log('Original String = ', original.length);
-            console.log('DONE');
-        });
-    });
 
-    //console.timeEnd();
-});
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//console.log('BEGIN ...');
+////console.time();
+//readFile('100k.txt', 'utf8').then(data => {
+//    console.log('data compressed 37,581,797 = ', data.length);
+     
+//    snappy.compress(data, function (err, compressed) {
+//        console.log('compressed Buffer = ', compressed.length);
+
+//        fs.writeFile('100k.bin', compressed, function (e1) {
+//            console.log(e1);
+//        });
+
+//        // return it as a string
+//        snappy.uncompress(compressed, { asBuffer: false }, function (err, original) {
+//            console.log('Original String = ', original.length);
+//            console.log('DONE');
+//        });
+//    });
+
+//    //console.timeEnd();
+//});
+
+
+
+
 
 //let k = 0;
 //require('fs').createReadStream('test.txt', {
-//    //flag: 'a+',
+//    //flag: 'a+',// r|a+|...
 //    //encoding: 'ascii',
 //    encoding: 'ascii',
 //    //start: 8,
@@ -35,7 +63,19 @@ readFile('test.txt', 'utf8').then(data => {
 //    k++;
 //}).on('end', () => {
 //    console.log('DONE');
+//  let s = this;
+//  setTimeout(function () {
+//    // the destroy method can be used to
+//    // close the stream manually
+//    s.destroy();
+//  }, 3000);
+//}).on('error', function (err) {
+//console.log(err); 
+//}).on('close', function () {
+//console.log(''read stream closed''); 
 //});
+
+
 
 
 
