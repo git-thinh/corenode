@@ -3,47 +3,27 @@ const util = require('util');
 const readFile = util.promisify(fs.readFile);
 var snappy = require('snappy');
 
+console.log('BEGIN ...');
+//console.time();
+readFile('100k.txt', 'utf8').then(data => {
+    console.log('data compressed 37,581,797 = ', data.length);
 
+    snappy.compress(data, function (err, compressed) {
+        console.log('compressed Buffer = ', compressed.length);
 
+        fs.writeFile('100k.bin', compressed, function (e1) {
+            console.log(e1);
+        });
 
+        // return it as a string
+        snappy.uncompress(compressed, { asBuffer: false }, function (err, original) {
+            console.log('Original String = ', original.length);
+            console.log('DONE');
+        });
+    });
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-//console.log('BEGIN ...');
-////console.time();
-//readFile('100k.txt', 'utf8').then(data => {
-//    console.log('data compressed 37,581,797 = ', data.length);
-     
-//    snappy.compress(data, function (err, compressed) {
-//        console.log('compressed Buffer = ', compressed.length);
-
-//        fs.writeFile('100k.bin', compressed, function (e1) {
-//            console.log(e1);
-//        });
-
-//        // return it as a string
-//        snappy.uncompress(compressed, { asBuffer: false }, function (err, original) {
-//            console.log('Original String = ', original.length);
-//            console.log('DONE');
-//        });
-//    });
-
-//    //console.timeEnd();
-//});
+    //console.timeEnd();
+});
 
 
 
@@ -97,7 +77,7 @@ var snappy = require('snappy');
 
 ////compressStream.write('hello');
 ////compressStream.write('world');
- 
+
 //var stream = fs.createReadStream('10k.txt');
 //stream.pipe(compressStream);
 
