@@ -37,6 +37,8 @@
             this.panel2 = new System.Windows.Forms.Panel();
             this.listKey = new System.Windows.Forms.ListBox();
             this.btnSearch = new System.Windows.Forms.Button();
+            this.btnExportAll = new System.Windows.Forms.Button();
+            this.btnExportSearch = new System.Windows.Forms.Button();
             this.panel1.SuspendLayout();
             this.panel2.SuspendLayout();
             this.SuspendLayout();
@@ -44,6 +46,8 @@
             // panel1
             // 
             this.panel1.BackColor = System.Drawing.SystemColors.ActiveCaptionText;
+            this.panel1.Controls.Add(this.btnExportSearch);
+            this.panel1.Controls.Add(this.btnExportAll);
             this.panel1.Controls.Add(this.btnSearch);
             this.panel1.Controls.Add(this.label2);
             this.panel1.Controls.Add(this.txtTime);
@@ -140,10 +144,29 @@
             this.btnSearch.Text = "Search";
             this.btnSearch.UseVisualStyleBackColor = true;
             // 
+            // btnExportAll
+            // 
+            this.btnExportAll.Location = new System.Drawing.Point(6, 6);
+            this.btnExportAll.Name = "btnExportAll";
+            this.btnExportAll.Size = new System.Drawing.Size(76, 23);
+            this.btnExportAll.TabIndex = 7;
+            this.btnExportAll.Text = "-> Export All";
+            this.btnExportAll.UseVisualStyleBackColor = true;
+            // 
+            // btnExportSearch
+            // 
+            this.btnExportSearch.Location = new System.Drawing.Point(85, 6);
+            this.btnExportSearch.Name = "btnExportSearch";
+            this.btnExportSearch.Size = new System.Drawing.Size(103, 23);
+            this.btnExportSearch.TabIndex = 8;
+            this.btnExportSearch.Text = "-> Export Search";
+            this.btnExportSearch.UseVisualStyleBackColor = true;
+            // 
             // fMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.BackColor = System.Drawing.SystemColors.ActiveCaptionText;
             this.ClientSize = new System.Drawing.Size(784, 361);
             this.Controls.Add(this.panel2);
             this.Controls.Add(this.listKey);
@@ -168,5 +191,7 @@
         private System.Windows.Forms.Panel panel2;
         private System.Windows.Forms.ListBox listKey;
         private System.Windows.Forms.Button btnSearch;
+        private System.Windows.Forms.Button btnExportSearch;
+        private System.Windows.Forms.Button btnExportAll;
     }
 }

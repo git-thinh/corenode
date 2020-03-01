@@ -7,6 +7,8 @@ npm install readline uuid cookie-parser lodash socket.io grpc @grpc/proto-loader
 
 npm install snappy snappy-stream
 npm install kue
+npm install redis
+npm install ioredis
 
 
 

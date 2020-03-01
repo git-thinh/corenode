@@ -4,39 +4,63 @@ let THREAD_ID;
 let SCOPE = 'WK_LOG';
 const MSG = [];
 
-process.on('message', (m_) => {
-    //console.log('\n-> ' + SCOPE + ': ', m_);
-    if (m_) {
-        switch (m_.code) {
+process.on('message', (m) => {
+    //console.log('\n-> ' + SCOPE + ': ', m);
+    if (m) {
+        switch (m.code) {
             case 'SET_THREAD_ID':
-                THREAD_ID = m_.data;
+                THREAD_ID = m.data;
                 return;
         }
-        MSG.push(m_);
+
+        setTimeout(function () {
+
+        });
+
+        let text = m;
+        if (typeof m != 'string') text = JSON.stringify(m);
+        text = new Date().toLocaleString() + '\r\n' + text;
+
+        MSG.push(text);
     }
 });
 
+
+const SNAPPY = require('snappy');
+const REDIS = require("redis");
+const CLIENT = REDIS.createClient({ detect_buffers: true });
+
+let _busy = false;
+let k = 1;
+
 const log___send = () => {
-    if (MSG.length > 0) {
-        const m = MSG.shift();
-
-        let s = m;
-        if (typeof m != 'string') s = JSON.stringify(m);
-        if (s.length > 0 && s[0] == '\n') s = s.substr(1);
-
-        console.log('\n-> ' + SCOPE + ': ' + s);
-
-        const buf = Buffer.from(s);
-        const udp = DGRAM.createSocket('udp4');
-        udp.send(buf, 0, buf.length, 15555, '127.0.0.1', (err) => {
-            // Send success
-            udp.close();
-        });
+    if (_busy) {
+        setTimeout(function () { log___send(); }, 1);
+        return;
     }
 
-    setTimeout(function () {
-        log___send();
-    }, 1);
+    if (MSG.length > 0) {
+        _busy = true;
+
+        const text = MSG.shift();         
+        console.log('\n-> ' + SCOPE + ': ' + text);
+
+        SNAPPY.compress(text, function (err, buf_compressed) {
+            if (err) { }
+            CLIENT.set(k, buf_compressed, function (err) {
+                if (err) {
+                    MSG.push(text);
+                    return;
+                }
+                else {
+                    k++;
+                }
+
+                _busy = false;
+                setTimeout(function () { log___send(); }, 1);
+            });
+        });
+    }
 };
 
 log___send();
