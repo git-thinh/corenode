@@ -10,10 +10,69 @@ const GRPC = require("grpc");
 const PROTO_LOADER = require("@grpc/proto-loader");
 const PROTO = GRPC.loadPackageDefinition(PROTO_LOADER.loadSync("msg.proto", { keepCase: true, longs: String, enums: String, defaults: true, oneofs: true }));
 
-
 const ___THREAD = {};
+const ___API = {};
+const ___JOB = {};
 
-//#region [ MAIN: GRPC ]
+const ___log = (obj) => { if (___THREAD[0]) ___THREAD[0].send(obj); };
+
+//#region [ SETTING ]
+
+const _mod_file = require('./lib/_mod_file.js');
+
+const setting___load = (callback) => {
+
+    const j1 = _mod_file.get_objects('job', 'js').then(data => {
+        for (var api in data) {
+            ___JOB[api] = data[api];
+
+            for (var key in data[api]) {
+                const js = '(function () { \
+                                try{ \
+                                    ___JOB["' + api + '"]["' + key + '"].execute = ' + data[api][key].text + '; \
+                                    ___JOB["' + api + '"]["' + key + '"].ok = true; \
+                                }catch(e){ \
+                                    ___JOB["' + api + '"]["' + key + '"].ok = false; \
+                                } \
+                            })()';
+                eval(js);
+            }
+        }
+        //console.log('SETTING ___JOB = ', Object.keys(___JOB));
+        return true;
+    });
+
+    const j2 = _mod_file.get_objects('api', 'js').then(data => {
+        for (var api in data) {
+            ___API[api] = data[api];
+
+            for (var key in data[api]) {
+                const js = '(function () { \
+                                try{ \
+                                    ___API["' + api + '"]["' + key + '"].execute = ' + data[api][key].text + '; \
+                                    ___API["' + api + '"]["' + key + '"].ok = true; \
+                                }catch(e){ \
+                                    ___API["' + api + '"]["' + key + '"].ok = false; \
+                                } \
+                            })()';
+                eval(js);
+            }
+        }
+        //console.log('SETTING ___API = ', Object.keys(___API));
+        return true;
+    });
+
+    Promise.all([j1, j2]).then(results => {
+        const ok = results.length == 2 && results[0] == true && results[1] == true;
+        //console.log('SETTING RESULTs = ', results);
+        //console.log('SETTING OK = ' + ok);
+        if (callback) callback(ok);
+    });
+};
+
+//#endregion
+
+//#region [ GRPC ]
 
 const SERVER_ADDRESS = "0.0.0.0:5001";
 let users = [];
@@ -45,11 +104,23 @@ SERVER.start();
 
 //#endregion
 
-//#region [ MAIN: KUE JOB ]
+//#region [ KUE JOB ]
 
 console.log('MAIN: ' + HTTP_PORT + ' -> ' + CLUSTER_WORKER_SIZE + ' cluster');
 for (var i = 0; i < CLUSTER_WORKER_SIZE; i++) {
-    CLUSTER.setupMaster({ exec: 'worker.js' /* , args: ['--use', 'http'] */ });
+    let worker = 'worker.js';
+    switch (i) {
+        case 0:
+            worker = 'w-log.js';
+            break;
+        case 1:
+            worker = 'w-db.js';
+            break;
+        case 2:
+            worker = 'w-notify.js';
+            break;
+    }
+    CLUSTER.setupMaster({ exec: worker /* , args: ['--use', 'http'] */ });
     ___THREAD[i] = CLUSTER.fork();
     ___THREAD[i].on('disconnect', () => {
         clearTimeout(timeout);
@@ -75,5 +146,9 @@ HTTP_SERVER.listen(HTTP_PORT, IP);
 
 //#endregion
 
+setting___load(function (ok_) {
+    console.log('\nSETTING DONE = ' + ok_);
+    ___log('\nSETTING DONE = ' + ok_);
 
+});
 

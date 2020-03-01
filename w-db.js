@@ -1,5 +1,5 @@
 ﻿let THREAD_ID;
-let SCOPE = 'WORKER';
+let SCOPE = 'WK_DB';
 
 const KUE = require('kue');
 const QUEUE = KUE.createQueue();

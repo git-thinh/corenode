@@ -87,6 +87,27 @@ Project("{E24C65DC-7377-472B-9ABA-BC803B73C61A}") = "grpc_nodejs", "D:\NodeJS\gr
 		SlnRelativePath = "D:\NodeJS\grpc_nodejs\"
 	EndProjectSection
 EndProject
+Project("{E24C65DC-7377-472B-9ABA-BC803B73C61A}") = "node_13.7.0x64", "D:\NodeJS\node_13.7.0x64\", "{8889BC81-C544-4B55-BFA6-9D76F6F37EC2}"
+	ProjectSection(WebsiteProperties) = preProject
+		TargetFrameworkMoniker = ".NETFramework,Version%3Dv4.0"
+		Debug.AspNetCompiler.VirtualPath = "/localhost_55533"
+		Debug.AspNetCompiler.PhysicalPath = "D:\NodeJS\node_13.7.0x64\"
+		Debug.AspNetCompiler.TargetPath = "PrecompiledWeb\localhost_55533\"
+		Debug.AspNetCompiler.Updateable = "true"
+		Debug.AspNetCompiler.ForceOverwrite = "true"
+		Debug.AspNetCompiler.FixedNames = "false"
+		Debug.AspNetCompiler.Debug = "True"
+		Release.AspNetCompiler.VirtualPath = "/localhost_55533"
+		Release.AspNetCompiler.PhysicalPath = "D:\NodeJS\node_13.7.0x64\"
+		Release.AspNetCompiler.TargetPath = "PrecompiledWeb\localhost_55533\"
+		Release.AspNetCompiler.Updateable = "true"
+		Release.AspNetCompiler.ForceOverwrite = "true"
+		Release.AspNetCompiler.FixedNames = "false"
+		Release.AspNetCompiler.Debug = "False"
+		VWDPort = "55533"
+		SlnRelativePath = "D:\NodeJS\node_13.7.0x64\"
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -100,6 +121,8 @@ Global
 		{7259F2C6-FB4A-4174-82CD-DF49F194B9DF}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{191FC56B-7DAD-4D64-B799-2DF50586C686}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{191FC56B-7DAD-4D64-B799-2DF50586C686}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8889BC81-C544-4B55-BFA6-9D76F6F37EC2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8889BC81-C544-4B55-BFA6-9D76F6F37EC2}.Debug|Any CPU.Build.0 = Debug|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
