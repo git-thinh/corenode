@@ -22,3 +22,5 @@ npm install -g grpc-tools
 npm install events
 npm install dotenv body-parser express web-push -S
 
+
+redis-server.exe --service-run redis.windows.conf --loglevel verbose

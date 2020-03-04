@@ -1,116 +1,71 @@
-﻿const fs = require('fs');
-const util = require('util');
-const readFile = util.promisify(fs.readFile);
-var snappy = require('snappy');
+﻿//const execFile = require('child_process').execFile;
+//const child = execFile('.\redis-server.exe', ['--port 12345'], (err, stdout, stderr) => {
+//    if (err) {
+//        throw err;
+//    }
+//    console.log(stdout);
+//});
 
-
-////////////////////////
-// https://github.com/Automattic/kue
-
-var kue = require('kue')
-    , queue = kue.createQueue();
-
-var job_1 = queue
-    .create('email', { title: 'welcome email for tj', to: 'tj@learnboost.com', template: 'welcome-email' })
-    .save(function (err) {
-        if (!err) console.log(job.id);
-    });
-
-
-const priority = {
-    low: 10
-    , normal: 0
-    , medium: -5
-    , high: -10
-    , critical: -15
-};
-var job_2 = queue
-    .create('email', { title: 'welcome email for tj', to: 'tj@learnboost.com', template: 'welcome-email' })
-    .priority('high')
-    .save();
-
-var job_3 = queue
-    .create('email', { title: 'welcome email for tj', to: 'tj@learnboost.com', template: 'welcome-email' })
-    .priority('high')
-    .attempts(5) // retry 5 if fail
-    .save();
-
-//////console.log('BEGIN ...');
-////////console.time();
-//////readFile('100k.txt', 'utf8').then(data => {
-//////    console.log('data compressed 37,581,797 = ', data.length);
-
-//////    snappy.compress(data, function (err, compressed) {
-//////        console.log('compressed Buffer = ', compressed.length);
-
-//////        fs.writeFile('100k.bin', compressed, function (e1) {
-//////            console.log(e1);
-//////        });
-
-//////        // return it as a string
-//////        snappy.uncompress(compressed, { asBuffer: false }, function (err, original) {
-//////            console.log('Original String = ', original.length);
-//////            console.log('DONE');
-//////        });
-//////    });
-
-//////    //console.timeEnd();
-//////});
-
-
-
-
-
-//let k = 0;
-//require('fs').createReadStream('test.txt', {
-//    //flag: 'a+',// r|a+|...
-//    //encoding: 'ascii',
-//    encoding: 'ascii',
-//    //start: 8,
-//    //end: 64,
-//    highWaterMark: 4 // default = 65536
-//}).on('data', function (chunk) {
-//    if (k == 0)
-//        console.log(chunk.length, chunk.toString());
-//    k++;
-//}).on('end', () => {
-//    console.log('DONE');
-//  let s = this;
-//  setTimeout(function () {
-//    // the destroy method can be used to
-//    // close the stream manually
-//    s.destroy();
-//  }, 3000);
-//}).on('error', function (err) {
-//console.log(err); 
-//}).on('close', function () {
-//console.log(''read stream closed''); 
+//var exec = require('child_process').exec;
+//exec('redis-server.exe --port 12345', function (err, stdout, stderr) {
+//    console.log('REDIS STARTING ...');
+//    console.log(stdout);
 //});
 
 
+var exec = require('child_process').exec;
+exec('redis-server.exe redis.conf --port 12345', { cwd: './redis/4.0/' }, function (error, stdout, stderr) {
+    console.log(stdout);
+});
 
 
+const redis = require("redis");
+const client = redis.createClient({ port: 12345 });
 
-//var snappyStream = require('snappy-stream')
-//    , compressStream = snappyStream.createCompressStream()
-//    , uncompressStream = snappyStream.createUncompressStream({
-//        asBuffer: false // optional option, asBuffer = false means that the stream emits strings, default: true
-//    });
+client.on("error", function (error) {
+    console.error(error);
+});
 
-//compressStream.on('data', function (chunk) {
-//    console.log('data compressed 3,884,961 = ', chunk.length);
-//    console.log(chunk.toString('utf8'));
-//});
+const _READ_LINE = require("readline");
+const _RL = _READ_LINE.createInterface({ input: process.stdin, output: process.stdout });
+_RL.on("line", function (text) {
+    const a = text.split(' ');
+    const cmd = a[0];
+    switch (cmd) {
+        case 'exit':
+            process.exit();
+            break;
+        case 'cls':
+            console.clear();
+            break;
+        case 'test': 
+            console.log(new Date().toString());
+            break;
+        case 'set':
+            if (a.length > 2)
+                client.set(a[1], a[2]);
+            break;
+        case 'get':
+            if (a.length > 1) {
+                client.get(a[1], function (err, reply) {
+                    if (err) {
+                        console.log(err);
+                    } else
+                        console.log(a[1], '=', reply == null ? '' : reply.toString());
+                });
+            }
+            break; 
+        case 'key':
 
-//uncompressStream.on('data', function (chunk) {
-//    console.log('data origin = ', chunk.length);
-//    //console.log(chunk);
-//});
+            client.keys('*', function (err, keys) {
+                if (err) return console.log(err);
+                if (keys) {
+                    console.log('ALL_KEY = ', keys);
+                }
+            });
 
-////compressStream.write('hello');
-////compressStream.write('world');
-
-//var stream = fs.createReadStream('10k.txt');
-//stream.pipe(compressStream);
-
-//compressStream.end();
+            break;
+        default:
+            break;
+    }
+});
